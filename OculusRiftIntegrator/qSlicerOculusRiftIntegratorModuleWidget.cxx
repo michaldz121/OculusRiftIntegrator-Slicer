@@ -51,6 +51,7 @@
 #include <vtkCamera.h>
 #include <vtkMatrix4x4.h>
 #include <vtkMath.h>
+#include <vtkMRMLLinearTransformNode.h>
 #include <vtkPerspectiveTransform.h>
 
 // Lib OVR (Oculus) includes
@@ -218,6 +219,16 @@ void qSlicerOculusRiftIntegratorModuleWidget::onFrameUpdate()
   this->HeadTransform->Translate(+neckPoint[0], +neckPoint[1], +neckPoint[2]);
   this->HeadTransform->RotateWXYZ(OVR::RadToDegree(eyeRoll),dirProj);
   this->HeadTransform->Translate(-neckPoint[0], -neckPoint[1], -neckPoint[2]);
+
+  //Head position
+  vtkMRMLLinearTransformNode* transform = vtkMRMLLinearTransformNode::SafeDownCast(d->transformNodeComboBox->currentNode());
+#ifdef TRANSFORM_NODE_MATRIX_COPY_REQUIRED
+  vtkSmartPointer<vtkMatrix4x4> outputMatrix = vtkSmartPointer<vtkMatrix4x4>::New();
+  transform->GetMatrixTransformToParent(outputMatrix);
+#else
+  vtkMatrix4x4* outputMatrix = transform->GetMatrixTransformToParent();
+#endif
+  this->HeadTransform->Translate(outputMatrix->GetElement(0,3), outputMatrix->GetElement(1,3), outputMatrix->GetElement(2,3));
 
   this->HeadTransform->TransformPoint(newFocalPoint,newFocalPoint);
   riftCamera->SetFocalPoint(newFocalPoint);
