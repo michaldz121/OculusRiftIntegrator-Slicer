@@ -25,7 +25,7 @@
 
 #include <vtkMRMLCameraNode.h>
 #include <vtkCamera.h>
-#include <qMRMLOculusThreeDWidget.h>
+#include <qMRMLThreeDWidget.h>
 #include <vtkPerspectiveTransform.h>
 
 #include "OVR.h"
@@ -71,7 +71,7 @@ protected:
 
   QTimer* updateTimer;
 
-  qMRMLOculusThreeDWidget* riftWindow;
+  qMRMLThreeDWidget* riftWindow;
 
   float pastRoll;
   float pastYaw;

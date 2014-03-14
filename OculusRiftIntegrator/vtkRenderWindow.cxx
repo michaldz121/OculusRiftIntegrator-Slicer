@@ -1354,7 +1354,7 @@ void vtkRenderWindow::StereoRenderComplete(void)
 	  
       // Distort pixel data
       //Interpupillary distance - Have this not be hard-coded ASAP
-      float ipd = 25;
+      int ipd = 25;
       // Left Eye
       for (int y = 0; y <= (size[1] - 1); ++y)
         {
@@ -1374,7 +1374,7 @@ void vtkRenderWindow::StereoRenderComplete(void)
             if (originalX >= 0 && originalY >= 0 && originalX < midX-1 && originalY < size[1]-1) 
               {
               // Left Eye
-              left = sleft + ((x+ipd) * 3) + (y * size[0] * 3);
+              left = sleft + ((x+25) * 3) + (y * size[0] * 3);
               leftTemp = undistorted + (originalX * 3) + (originalY * size[0] * 3);
   			
               *left++ = *leftTemp++;
@@ -1382,7 +1382,7 @@ void vtkRenderWindow::StereoRenderComplete(void)
               *left++ = *leftTemp++;
               
               // Right Eye
-              right = sleft + (((x-ipd) + offsetX) * 3) + (y * size[0] * 3);
+              right = sleft + (((x-25) + offsetX) * 3) + (y * size[0] * 3);
               rightTemp = undistorted + ((originalX + offsetX) * 3) + (originalY * size[0] * 3);
   			
               *right++ = *rightTemp++;

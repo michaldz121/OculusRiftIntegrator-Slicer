@@ -22,7 +22,7 @@ SET(OculusLib
   )
 #-----------------------------------------------------------------------------
 add_subdirectory(Logic)
-add_subdirectory(Widgets)
+#add_subdirectory(Widgets)
 
 #-----------------------------------------------------------------------------
 set(MODULE_EXPORT_DIRECTIVE "Q_SLICER_QTMODULES_${MODULE_NAME_UPPER}_EXPORT")
@@ -31,8 +31,8 @@ set(MODULE_EXPORT_DIRECTIVE "Q_SLICER_QTMODULES_${MODULE_NAME_UPPER}_EXPORT")
 set(MODULE_INCLUDE_DIRECTORIES
   ${CMAKE_CURRENT_SOURCE_DIR}/Logic
   ${CMAKE_CURRENT_BINARY_DIR}/Logic
-  ${CMAKE_CURRENT_SOURCE_DIR}/Widgets
-  ${CMAKE_CURRENT_BINARY_DIR}/Widgets
+  #${CMAKE_CURRENT_SOURCE_DIR}/Widgets
+  #${CMAKE_CURRENT_BINARY_DIR}/Widgets
   ${OculusInclude_DIR}
   )
 
@@ -41,6 +41,8 @@ set(MODULE_SRCS
   qSlicer${MODULE_NAME}Module.h
   qSlicer${MODULE_NAME}ModuleWidget.cxx
   qSlicer${MODULE_NAME}ModuleWidget.h
+  vtkRenderWindow.cxx
+  vtkRenderWindow.h
   )
 
 set(MODULE_MOC_SRCS
@@ -54,7 +56,7 @@ set(MODULE_UI_SRCS
 
 set(MODULE_TARGET_LIBRARIES
   vtkSlicer${MODULE_NAME}ModuleLogic
-  qSlicer${MODULE_NAME}ModuleWidgets
+  #qSlicer${MODULE_NAME}ModuleWidgets
   ${OculusLib}
   )
 
