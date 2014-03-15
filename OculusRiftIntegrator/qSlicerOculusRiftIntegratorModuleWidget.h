@@ -27,6 +27,7 @@
 #include <vtkCamera.h>
 #include <qMRMLThreeDWidget.h>
 #include <vtkPerspectiveTransform.h>
+#include <vtkPolyData.h>
 
 #include "OVR.h"
 
@@ -84,7 +85,10 @@ protected:
   double permaViewUp[3];
   double permaAxis[3];
 
+  double headOrigin[3];
+
   vtkPerspectiveTransform *HeadTransform;
+  vtkPolyData *coneModel;
 
   
 protected:

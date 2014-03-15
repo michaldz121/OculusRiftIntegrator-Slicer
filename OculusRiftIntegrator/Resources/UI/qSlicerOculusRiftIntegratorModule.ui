@@ -161,6 +161,25 @@
         </property>
        </widget>
       </item>
+      <item row="1" column="1">
+       <widget class="qMRMLNodeComboBox" name="modelNodeComboBox">
+        <property name="nodeTypes">
+         <stringlist>
+          <string>vtkMRMLModelNode</string>
+         </stringlist>
+        </property>
+        <property name="showHidden">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_8">
+        <property name="text">
+         <string>Viewing Model</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>
@@ -315,6 +334,22 @@
     <hint type="destinationlabel">
      <x>178</x>
      <y>292</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>qSlicerOculusRiftIntegratorModule</sender>
+   <signal>mrmlSceneChanged(vtkMRMLScene*)</signal>
+   <receiver>modelNodeComboBox</receiver>
+   <slot>setMRMLScene(vtkMRMLScene*)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>242</x>
+     <y>531</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>260</x>
+     <y>312</y>
     </hint>
    </hints>
   </connection>

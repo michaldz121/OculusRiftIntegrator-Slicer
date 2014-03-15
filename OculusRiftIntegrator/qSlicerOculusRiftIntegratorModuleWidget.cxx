@@ -43,6 +43,8 @@
 #include <vtkMRMLCameraNode.h>
 
 #include <vtkMRMLNode.h>
+#include <vtkMRMLModelNode.h>
+#include <vtkMRMLModelDisplayNode.h>
 
 #include <vtkNew.h>
 #include <vtkRenderer.h>
@@ -53,6 +55,8 @@
 #include <vtkMath.h>
 #include <vtkMRMLLinearTransformNode.h>
 #include <vtkPerspectiveTransform.h>
+#include <vtkLineSource.h>
+#include <vtkTubeFilter.h>
 
 // Lib OVR (Oculus) includes
 #include <OVR.h>
@@ -105,8 +109,8 @@ qSlicerOculusRiftIntegratorModuleWidget::qSlicerOculusRiftIntegratorModuleWidget
   eyePitch = 0;
 
   neckPoint[0] = 0;
-  neckPoint[1] = -750;
-  neckPoint[2] = -100;
+  neckPoint[1] = -75;
+  neckPoint[2] = -10;
 
   permaAxis[0] = 0; permaAxis[1] = 1; permaAxis[2] = 0;
 
@@ -171,6 +175,37 @@ void qSlicerOculusRiftIntegratorModuleWidget::onInitializeTracking()
   pastRoll=0;
 
 
+  //Head origin transform
+  //vtkSmartPointer<vtkPerspectiveTransform> HeadOrigin = vtkSmartPointer<vtkPerspectiveTransform>::New();
+  //HeadOrigin->Identity();
+  vtkMRMLLinearTransformNode* transform = vtkMRMLLinearTransformNode::SafeDownCast(d->transformNodeComboBox->currentNode());
+#ifdef TRANSFORM_NODE_MATRIX_COPY_REQUIRED
+  vtkSmartPointer<vtkMatrix4x4> outputMatrix = vtkSmartPointer<vtkMatrix4x4>::New();
+  transform->GetMatrixTransformToParent(outputMatrix);
+#else
+  vtkMatrix4x4* outputMatrix = transform->GetMatrixTransformToParent();
+#endif
+  //HeadOrigin->Translate(outputMatrix->GetElement(0,3), outputMatrix->GetElement(1,3), outputMatrix->GetElement(2,3));
+
+  headOrigin[0] = outputMatrix->GetElement(0,3);
+  headOrigin[2] = outputMatrix->GetElement(1,3);
+  headOrigin[1] = outputMatrix->GetElement(2,3);
+
+
+  //Initialize model
+  vtkSmartPointer<vtkPolyData> model = vtkSmartPointer<vtkPolyData>::New();
+  (vtkMRMLModelNode::SafeDownCast(d->modelNodeComboBox->currentNode()))->SetAndObservePolyData(model);
+
+  vtkSmartPointer<vtkMRMLModelDisplayNode> displayNode = vtkSmartPointer<vtkMRMLModelDisplayNode>::New();
+  displayNode->BackfaceCullingOff();
+  displayNode = vtkMRMLModelDisplayNode::SafeDownCast(this->mrmlScene()->AddNode(displayNode));
+  (vtkMRMLModelNode::SafeDownCast(d->modelNodeComboBox->currentNode()))->SetAndObserveDisplayNodeID(displayNode->GetID());
+  (vtkMRMLModelNode::SafeDownCast(d->modelNodeComboBox->currentNode()))->SetHideFromEditors(0);
+  (vtkMRMLModelNode::SafeDownCast(d->modelNodeComboBox->currentNode()))->SetSelectable(1);
+  (vtkMRMLModelNode::SafeDownCast(d->modelNodeComboBox->currentNode()))->Modified();
+
+  //this->coneModel = (vtkMRMLModelNode::SafeDownCast(d->modelNodeComboBox->currentNode()))->GetPolyData();
+
   updateTimer->start();
 }
 
@@ -220,7 +255,8 @@ void qSlicerOculusRiftIntegratorModuleWidget::onFrameUpdate()
   this->HeadTransform->RotateWXYZ(OVR::RadToDegree(eyeRoll),dirProj);
   this->HeadTransform->Translate(-neckPoint[0], -neckPoint[1], -neckPoint[2]);
 
-  //Head position
+
+
   vtkMRMLLinearTransformNode* transform = vtkMRMLLinearTransformNode::SafeDownCast(d->transformNodeComboBox->currentNode());
 #ifdef TRANSFORM_NODE_MATRIX_COPY_REQUIRED
   vtkSmartPointer<vtkMatrix4x4> outputMatrix = vtkSmartPointer<vtkMatrix4x4>::New();
@@ -228,12 +264,34 @@ void qSlicerOculusRiftIntegratorModuleWidget::onFrameUpdate()
 #else
   vtkMatrix4x4* outputMatrix = transform->GetMatrixTransformToParent();
 #endif
-  this->HeadTransform->Translate(outputMatrix->GetElement(0,3), outputMatrix->GetElement(1,3), outputMatrix->GetElement(2,3));
+
+  this->HeadTransform->Translate(headOrigin[0] - outputMatrix->GetElement(0,3), headOrigin[1] - outputMatrix->GetElement(2,3), headOrigin[2] - outputMatrix->GetElement(1,3));
 
   this->HeadTransform->TransformPoint(newFocalPoint,newFocalPoint);
   riftCamera->SetFocalPoint(newFocalPoint);
   this->HeadTransform->TransformPoint(pos,pos);
   riftCamera->SetPosition(pos);
+
+  headOrigin[0] = outputMatrix->GetElement(0,3);
+  headOrigin[1] = outputMatrix->GetElement(2,3);
+  headOrigin[2] = outputMatrix->GetElement(1,3);
+
+  vtkSmartPointer<vtkLineSource> line = vtkSmartPointer<vtkLineSource>::New();
+  line->SetPoint1(pos[0], pos[1], pos[2]);
+  line->SetPoint2(newFocalPoint[0], newFocalPoint[1], newFocalPoint[2]);
+  line->Update();
+
+  vtkSmartPointer<vtkTubeFilter> tube = vtkSmartPointer<vtkTubeFilter>::New();
+  tube->SetInputConnection(line->GetOutputPort());
+  tube->SetRadius(10);
+  tube->SetNumberOfSides(6);
+  tube->Update();
+
+  //coneModel = tube->GetOutput();
+  (vtkMRMLModelNode::SafeDownCast(d->modelNodeComboBox->currentNode()))->SetAndObservePolyData(tube->GetOutput());
+
+
+
 
   //Save last values
   pastRoll = roll;
@@ -319,6 +377,7 @@ void qSlicerOculusRiftIntegratorModuleWidget::onReset()
   permaAxis[2] = riftCamera->GetViewTransformMatrix()->GetElement(0,2);
 
   riftCamera->SetClippingRange(0.01,10000);
+  riftCamera->SetViewAngle(90);
 
   Quatf hmdOrient = sFusion->GetOrientation();
   float roll = 0.0f;
