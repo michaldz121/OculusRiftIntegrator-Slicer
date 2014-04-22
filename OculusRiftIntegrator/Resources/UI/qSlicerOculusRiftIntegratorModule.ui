@@ -54,13 +54,6 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="label_6">
-        <property name="text">
-         <string>Camera Node</string>
-        </property>
-       </widget>
-      </item>
       <item row="1" column="1">
        <widget class="qMRMLNodeComboBox" name="cameraNodeComboBox">
         <property name="nodeTypes">
@@ -124,6 +117,66 @@
         </property>
         <property name="value">
          <double>0.050000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_6">
+        <property name="text">
+         <string>Camera Node</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="ctkCollapsibleButton" name="TrackingBox">
+     <property name="text">
+      <string>Tracking</string>
+     </property>
+     <property name="contentsFrameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <layout class="QFormLayout" name="formLayout_3">
+      <property name="fieldGrowthPolicy">
+       <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+      </property>
+      <item row="0" column="1">
+       <widget class="qMRMLNodeComboBox" name="transformNodeComboBox">
+        <property name="nodeTypes">
+         <stringlist>
+          <string>vtkMRMLLinearTransformNode</string>
+         </stringlist>
+        </property>
+        <property name="showHidden">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_7">
+        <property name="text">
+         <string>Head Translation</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="qMRMLNodeComboBox" name="modelNodeComboBox">
+        <property name="nodeTypes">
+         <stringlist>
+          <string>vtkMRMLModelNode</string>
+         </stringlist>
+        </property>
+        <property name="showHidden">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_8">
+        <property name="text">
+         <string>Viewing Model</string>
         </property>
        </widget>
       </item>
@@ -247,8 +300,8 @@
      <y>382</y>
     </hint>
     <hint type="destinationlabel">
-     <x>199</x>
-     <y>86</y>
+     <x>269</x>
+     <y>72</y>
     </hint>
    </hints>
   </connection>
@@ -263,8 +316,40 @@
      <y>471</y>
     </hint>
     <hint type="destinationlabel">
-     <x>138</x>
-     <y>54</y>
+     <x>227</x>
+     <y>53</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>qSlicerOculusRiftIntegratorModule</sender>
+   <signal>mrmlSceneChanged(vtkMRMLScene*)</signal>
+   <receiver>transformNodeComboBox</receiver>
+   <slot>setMRMLScene(vtkMRMLScene*)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>177</x>
+     <y>538</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>178</x>
+     <y>292</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>qSlicerOculusRiftIntegratorModule</sender>
+   <signal>mrmlSceneChanged(vtkMRMLScene*)</signal>
+   <receiver>modelNodeComboBox</receiver>
+   <slot>setMRMLScene(vtkMRMLScene*)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>242</x>
+     <y>531</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>260</x>
+     <y>312</y>
     </hint>
    </hints>
   </connection>

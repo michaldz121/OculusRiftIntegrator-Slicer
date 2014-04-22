@@ -1354,7 +1354,7 @@ void vtkRenderWindow::StereoRenderComplete(void)
 	  
       // Distort pixel data
       //Interpupillary distance - Have this not be hard-coded ASAP
-      float ipd = 25;
+
       // Left Eye
       for (int y = 0; y <= (size[1] - 1); ++y)
         {
