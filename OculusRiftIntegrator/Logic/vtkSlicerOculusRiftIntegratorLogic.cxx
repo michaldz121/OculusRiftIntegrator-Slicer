@@ -18,6 +18,9 @@
 // OculusRiftIntegrator Logic includes
 #include "vtkSlicerOculusRiftIntegratorLogic.h"
 
+//Custom VTK includes
+#include "vtkRenderWindow.h"
+
 // MRML includes
 #include "vtkMRMLModelDisplayNode.h"
 #include "vtkMRMLModelNode.h"
@@ -49,7 +52,6 @@
 #include <vtkNew.h>
 #include <vtkSmartPointer.h>
 #include <vtkRenderer.h>
-#include <vtkRenderWindow.h>
 #include <vtkCommand.h>
 #include <vtkMRMLScene.h>
 #include <vtkObjectFactory.h>

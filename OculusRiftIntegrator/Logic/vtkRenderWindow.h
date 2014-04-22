@@ -56,7 +56,7 @@ class vtkUnsignedCharArray;
 #define VTK_STEREO_DRESDEN      6
 #define VTK_STEREO_ANAGLYPH     7
 #define VTK_STEREO_CHECKERBOARD 8
-#define VTK_STEREO_OCULUSRIFT   9
+#define VTK_STEREO_OCULUSRIFT   101
 
 #define VTK_CURSOR_DEFAULT   0
 #define VTK_CURSOR_ARROW     1
@@ -258,7 +258,7 @@ public:
     {this->SetStereoType(VTK_STEREO_ANAGLYPH);}
   void SetStereoTypeToCheckerboard()
     {this->SetStereoType(VTK_STEREO_CHECKERBOARD);}
-  void SetStereoTypeToOculusRift()
+  void SetStereoTypeToUserDefined_1()
     {this->SetStereoType(VTK_STEREO_OCULUSRIFT);}	
 
   const char *GetStereoTypeAsString();

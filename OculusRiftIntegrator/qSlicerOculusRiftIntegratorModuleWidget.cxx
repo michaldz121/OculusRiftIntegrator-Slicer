@@ -37,9 +37,9 @@
 #include <qSlicerApplication.h>
 #include <qSlicerIOManager.h>
 
-#include <vtkMRMLOculusViewNode.h>
+#include <vtkMRMLViewNode.h>
 #include <qMRMLThreeDView.h>
-#include <qMRMLOculusThreeDWidget.h>
+#include <qMRMLThreeDWidget.h>
 #include <vtkMRMLCameraNode.h>
 
 #include <vtkMRMLNode.h>
@@ -125,11 +125,11 @@ void qSlicerOculusRiftIntegratorModuleWidget::onOpenWindow()
   Q_D(qSlicerOculusRiftIntegratorModuleWidget);
 
   //qSlicerApplication * app = qSlicerApplication::application();
-  //vtkSmartPointer< vtkMRMLOculusViewNode > viewNode = vtkSmartPointer< vtkMRMLOculusViewNode >::New();
+  //vtkSmartPointer< vtkMRMLViewNode > viewNode = vtkSmartPointer< vtkMRMLViewNode >::New();
   //app->mrmlScene()->AddNode(viewNode);
 
-  riftWindow = new qMRMLOculusThreeDWidget();
-  //vtkMRMLOculusViewNode::SafeDownCast(d->viewNodeComboBox->currentNode())->SetStereoType(5);
+  riftWindow = new qMRMLThreeDWidget();
+  //vtkMRMLViewNode::SafeDownCast(d->viewNodeComboBox->currentNode())->SetStereoType(5);
   riftWindow->setMRMLViewNode(vtkMRMLViewNode::SafeDownCast(d->viewNodeComboBox->currentNode()));
   //riftWindow->setMRMLViewNode(viewNode);
   riftWindow->showNormal();
